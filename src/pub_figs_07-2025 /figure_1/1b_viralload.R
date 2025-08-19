@@ -11,7 +11,7 @@ library(ggplot2)
 library(RColorBrewer)
 library(svglite)
 setwd("~/dir")
-viralload <- read.csv("file.csv")
+viralload <- read.csv("viralload.csv")
 ## this returns a data frame with columns: timepts | participant1 | participant2 | etc. | participant1_2 | participant 2_2 | etc.
 ## and rows: 0, 1, 2, etc. (days)
 
