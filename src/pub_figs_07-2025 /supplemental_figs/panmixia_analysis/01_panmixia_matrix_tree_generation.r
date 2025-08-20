@@ -2,18 +2,10 @@
 
 ## First I generate trees from fasta files of each sample from aligned fasta files
 library(ggplot2)
-library(readxl)
 library(stringr)
-library(stringdist)
 library(seqinr)
 library(ape)
 library(phytools)
-library(beeswarm)
-library(vioplot)
-library(ggseqlogo)
-library(bioseq)
-library(gridExtra)
-library(filesstrings)
 
 setwd("~/final_panmixia/")
 
