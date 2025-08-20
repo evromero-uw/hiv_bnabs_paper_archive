@@ -21,7 +21,7 @@ theme_plot <- function (){
     )
 }
 
-## matrix p-value .csv exported from 02_SGA_SmartUMI-panmixia was binned by p-values and converted to .csv below
+## matrix p-value .csv exported from 02_SGA_SMRT-UMI_panmixia.ipynb was binned by p-values and converted to .csv below
 pval<-read.csv("~/panmixia/binned_pvalues.csv")
 pval
 ggplot(pval, aes(x=category, y=X., fill=p.10..4)) +
