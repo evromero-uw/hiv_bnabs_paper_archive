@@ -1,0 +1,20 @@
+# Parameters for generating logo plots using LANL Analyze Align tool
+
+### Input: 
+  - Upload alignment of env amino acid sequences for one participant (all timepoints) with HXB2 reference sequence
+      - Names of sequences start with "timept."
+  - Sequence type: Amino Acid
+  - Positions/range to analyze: 325, 334, 336
+  - Range numbers refer to: Residues of HXB2
+  - Group the sequences: Report separate results for subsets of sequences
+      - Group sequences by: the characters in field 1 of names delimited by "."
+### Logo options: 
+  - Defaults
+  - Color scheme: Paste/upload predefined scheme
+    - Upload reference sheet of previously characterized resistance/sensitive mutations gathered from Bricault et al (red = resistant, blue = sensitive)
+    - Mutation | Color |
+  - Remove symbols from logo: residues of 1st seq of alignment (HXB2)
+  - Potential N-linked glycosolation sites (Mark)
+### Other options: 
+  - Frequency calculation: 95%
+  - Master sequence for finding variants: 1st seq of seq group
