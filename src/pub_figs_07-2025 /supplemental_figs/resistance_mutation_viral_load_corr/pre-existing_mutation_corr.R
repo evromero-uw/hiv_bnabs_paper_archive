@@ -13,6 +13,11 @@ library(svglite)
 df <- read.csv("~/time_to_rebound_MCA0885.csv")
 colnames(df) <- c("id", "weeks", "days", "twentyfive", "thirtytwo", "thirtyfour", "totalres", "vl_log", "vl", "vl_log_w1", "vl_w1")
 df[ , colSums(is.na(df))==0]
+
+## now exclude 1HD9K which is an outlier (100% resistance at day 0)
+g1 <- subset(df, id=="1HD9K")
+df <- df[-9,]
+df
 theme_plot <- function (){
   font <- "Arial"
   theme_bw() %+replace%
@@ -29,10 +34,8 @@ theme_plot <- function (){
 }
 
 ### In panel A, we compare days to rebound with % pre-existing resistance mutations
-model<- lm(days ~ totalres, df)
-summary((model))
-r_squared <- summary(model)$r.squared
-r_squared
+corr <- cor.test(x=df$days, y=df$totalres, method = 'pearson')
+corr
 ggplot(data=df, aes(days, totalres)) +
   geom_point() +
   ylab("Percent resistance mutations at day 0") + 
@@ -43,15 +46,15 @@ ggplot(data=df, aes(days, totalres)) +
   theme_plot() +
   geom_count()+
   scale_size_continuous(breaks = round)+
-  stat_poly_eq()
+  geom_point(data=g1, color="red")+
+  stat_cor(method="pearson", label.x=45, label.y=0.99, size=6/.pt)+
+  geom_smooth(method=lm, color="black", se=FALSE, size=0.5)
 ggsave("time_to_rebound_res.svg", width=8, height=5, units="cm", dpi=300)
 
 
 ## Panel B compares viral load at day 0 to % pre-existing resistance mutations
-model<- lm(vl ~ totalres, df)
-summary(model)
-r_squared <- summary(model)$r.squared
-r_squared
+corr.b <- cor.test(x=df$vl, y=df$totalres, method = 'pearson')
+corr.b
 ggplot(data=df, aes(vl, totalres)) +
   geom_point(size=0.5) +
   ylab("Percent resistance mutations at day 0") + 
@@ -59,16 +62,16 @@ ggplot(data=df, aes(vl, totalres)) +
   scale_x_log10(breaks=c(0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000), labels=c("0", "10", "20", "30", "40", "50", "60", "70", "80")) +
   scale_y_continuous(limits=c(0, 1), labels=c(0, 25, 50, 75, 100)) +
   geom_smooth(method=lm, se=FALSE, color="black", size = 0.25) +
-  #stat_poly_eq() +
-  theme_plot() 
+  theme_plot() +
+  geom_point(data=g1, size=1, color="red")+
+  annotate("label", x=75000, y=1, label=paste("r=", corr.b$estimate, sep=""), label.size=NA, size=6/.pt) +
+  geom_smooth(method=lm, color="black", se=FALSE, size=0.5)
 ggsave("vl_res.svg", width=8, height=5, units="cm", dpi=300)
 
 
 ## Panel C compares viral laod at week 1 to % pres-existing resistance mutations
-model<- lm(vl_w1 ~ total_res, df)
-summary(model)
-r_squared <- summary(model)$r.squared
-r_squared
+corr.c <- cor.test(x=df$vl_w1, y=df$totalres, method = 'pearson')
+corr.c
 ggplot(data=df, aes(vl_w1, totalres)) +
   geom_point(size=0.5) +
   ylab("Percent resistance mutations at Day 0") + 
@@ -77,6 +80,14 @@ ggplot(data=df, aes(vl_w1, totalres)) +
   #scale_x_continuous(trans="log10", breaks=c(1, 100, 1000, 2000, 5000, 10000)) +
   scale_x_log10(breaks=c(0, 500, 1000, 2000, 5000, 10000), labels =c("0", "500", "1000", "2000", "5000", "10000")) + 
   scale_y_continuous(limits=c(0, 1), labels=c(0, 25, 50, 75, 100)) +
-  #stat_poly_eq()+
-  theme_plot()
+  theme_plot() +
+  geom_point(size=1) +
+  ylab("Percent resistance mutations at Day 0") + 
+  xlab("Viral load at Week 1 (copies/mL)") +
+  scale_x_log10(breaks=c(0, 500, 1000, 2000, 5000, 10000), labels =c("0", "500", "1000", "2000", "5000", "10000")) + 
+  scale_y_continuous(limits=c(0, 1), labels=c(0, 25, 50, 75, 100)) +
+  theme_plot() +
+  geom_point(data=g1, size=1, color="red") +
+  annotate("label", x=75000, y=1, label=paste("r=", corr.b$estimate, sep=""), label.size=NA, size=6/.pt) +
+  geom_smooth(method=lm, color="black", se=FALSE, size=0.5)
 ggsave("vl_w1_res.svg", width=8, height=5, units="cm", dpi=300)
