@@ -90,7 +90,7 @@ theme_plot <- function (){
     )
 }
 
-lm(Count ~ VL, seq_count)
+corr <- cor.test(x=seq_count$VL, y=seq_count$Count, method = 'spearman')
 ggplot(seq_count, aes(x=VL, y=Count)) +
   geom_point(size=0.5) +
   xlab("Viral Load (c/mL)") +
@@ -104,5 +104,5 @@ ggplot(seq_count, aes(x=VL, y=Count)) +
     default = FALSE,
     clip = "on"
   ) +
-  geom_smooth(method=lm, se=FALSE, color="black", size = 0.25)
+  annotate("label", x=100000, y=1, label=paste("r=", corr$estimate, sep=""), label.size=NA)
 ggsave("SMRT_UMI_vs_VL.svg", width = 5, height = 4.25, units="cm", dpi=600)
